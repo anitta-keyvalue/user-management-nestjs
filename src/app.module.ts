@@ -3,6 +3,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ormConfig } from '../orm.config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { RolesModule } from './roles/roles.module';
+import Role from './entities/role.entity';
+import Permission from './entities/permission.entity';
+import User from './entities/user.entity';
+import AbstractEntity from './entities/abstract.entity';
+import RolePermission from './entities/role_permission.entity';
 
 const typeOrmConfig = ormConfig;
 
@@ -11,7 +17,9 @@ const typeOrmConfig = ormConfig;
     TypeOrmModule.forRoot({
       ...typeOrmConfig,
       autoLoadEntities: true,
+      entities: [Role, Permission, User, AbstractEntity, RolePermission],
     }),
+    RolesModule,
   ],
   controllers: [AppController],
   providers: [AppService],
