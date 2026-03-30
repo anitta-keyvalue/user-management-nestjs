@@ -11,7 +11,6 @@ export class RolesService {
 
   async create(createRoleDto: CreateRoleDto): Promise<Role> {
     const role = await this.rolesRepository.findByName(createRoleDto.name);
-    console.log('service remove');
     if (role) {
       throw new HttpException(400, 'Role already existing');
     }
@@ -22,8 +21,8 @@ export class RolesService {
     return await this.rolesRepository.getAll();
   }
 
-  async findOne(name: string): Promise<Role | null> {
-    return await this.rolesRepository.findByName(name);
+  async findOne(id: string): Promise<Role | null> {
+    return await this.rolesRepository.findById(Number(id));
   }
 
   async update(id: number, updateRoleDto: UpdateRoleDto) {

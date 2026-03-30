@@ -24,7 +24,7 @@ export class RolesRepository extends Repository<Role> {
   async updateRole(id: number, data: Partial<Role>): Promise<Role> {
     const role = await this.findOneBy({ id });
     if (!role) {
-      throw new HttpException(400, 'Eole not found');
+      throw new HttpException(400, 'Role not found');
     }
     return await this.save({ ...data, id });
   }
