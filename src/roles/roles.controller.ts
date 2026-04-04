@@ -10,6 +10,7 @@ import {
 import { RolesService } from './roles.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
+import { AddPermissionDto } from './dto/add-permission.dto';
 
 @Controller('roles')
 export class RolesController {
@@ -38,5 +39,18 @@ export class RolesController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.rolesService.remove(+id);
+  }
+
+  @Post('addPermission')
+  addPermission(@Body() addPermissionDto: AddPermissionDto) {
+    return this.rolesService.addPermission(addPermissionDto);
+  }
+
+  @Delete(':roleId/permissions/:permissionId')
+  removePermission(
+    @Param('roleId') roleId: number,
+    @Param('permissionId') permissionId: number,
+  ) {
+    return this.rolesService.removePermission(roleId, permissionId);
   }
 }

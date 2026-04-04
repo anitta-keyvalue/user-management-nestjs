@@ -2,6 +2,8 @@ import { DataSource, DeleteResult, Repository } from 'typeorm';
 import Role from '../entities/role.entity';
 import HttpException from '../execeptions/httpException';
 import { Injectable } from '@nestjs/common';
+import RolePermission from '../entities/role_permission.entity';
+import Permission from '../entities/permission.entity';
 
 @Injectable()
 export class RolesRepository extends Repository<Role> {
@@ -39,5 +41,30 @@ export class RolesRepository extends Repository<Role> {
       throw new HttpException(400, 'Role not found');
     }
     return await this.delete(id);
+  }
+
+  async addPermission(roleId: number, permissionId: number) {
+    const rolePermission = new RolePermission();
+    rolePermission.permission = { id: permissionId } as Permission;
+    rolePermission.role = { id: roleId } as Role;
+
+    try {
+      return await this.manager.save(RolePermission, rolePermission);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_e) {
+      throw new HttpException(409, 'This role already has this permission');
+    }
+  }
+
+  async removePermission(roleId: number, permissionId: number) {
+    try {
+      return await this.manager.delete(RolePermission, {
+        role: { id: roleId },
+        permission: { id: permissionId },
+      });
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_e) {
+      throw new HttpException(409, 'Error while deleting permisiions');
+    }
   }
 }
