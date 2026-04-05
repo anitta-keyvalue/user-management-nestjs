@@ -5,6 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { RolesModule } from './roles/roles.module';
 import { PermissionsModule } from './permissions/permissions.module';
+import { UsersModule } from './users/users.module';
 import Role from './entities/role.entity';
 import Permission from './entities/permission.entity';
 import User from './entities/user.entity';
@@ -22,6 +23,7 @@ const typeOrmConfig = ormConfig;
     }),
     RolesModule,
     PermissionsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],

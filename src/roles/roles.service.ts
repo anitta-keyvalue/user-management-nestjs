@@ -35,7 +35,7 @@ export class RolesService {
       updateRoleDto.name ?? '',
     );
     if (role) {
-      throw new HttpException(400, 'Role already existing');
+      throw new HttpException(400, 'Role not existing');
     }
     return await this.rolesRepository.updateRole(id, updateRoleDto);
   }
