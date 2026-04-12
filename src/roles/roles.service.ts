@@ -30,6 +30,10 @@ export class RolesService {
     return await this.rolesRepository.findById(Number(id));
   }
 
+  async findByName(name: string): Promise<Role | null> {
+    return await this.rolesRepository.findByName(name);
+  }
+
   async update(id: number, updateRoleDto: UpdateRoleDto) {
     const role = await this.rolesRepository.findByName(
       updateRoleDto.name ?? '',

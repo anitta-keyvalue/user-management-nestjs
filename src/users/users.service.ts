@@ -32,6 +32,10 @@ export class UsersService {
     return await this.usersRepository.findById(Number(id));
   }
 
+  async findByEmail(email: string): Promise<User | null> {
+    return await this.usersRepository.findByEmail(email);
+  }
+
   async update(id: number, updateUserDto: UpdateUserDto) {
     const user = await this.usersRepository.findByEmail(
       updateUserDto.email ?? '',
@@ -44,5 +48,9 @@ export class UsersService {
 
   async remove(id: number) {
     return await this.usersRepository.deleteUser(id);
+  }
+
+  async findOneWithPermissions(email: string): Promise<User | null> {
+    return await this.usersRepository.findOneWithPermissions(email);
   }
 }

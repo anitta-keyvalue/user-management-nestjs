@@ -10,7 +10,21 @@ export class UsersRepository extends Repository<User> {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return await this.findOne({ where: { email: email } });
+    const user = await this.findOne({
+      where: { email: email.trim() },
+      select: {
+        id: true,
+        email: true,
+        password: true, // 🔓 Explicitly "unmasking" it here
+        name: true,
+      },
+      relations: [
+        'role',
+        'role.rolePermissions',
+        'role.rolePermissions.permission',
+      ],
+    });
+    return user;
   }
 
   async findById(id: number): Promise<User | null> {
@@ -41,5 +55,16 @@ export class UsersRepository extends Repository<User> {
       throw new HttpException(400, 'User not found');
     }
     return await this.delete(id);
+  }
+
+  async findOneWithPermissions(email: string): Promise<User | null> {
+    return await this.findOne({
+      where: { email },
+      relations: [
+        'role',
+        'role.rolePermissions',
+        'role.rolePermissions.permission',
+      ],
+    });
   }
 }
