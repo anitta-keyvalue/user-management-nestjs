@@ -20,6 +20,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { PermissionsGuard } from '../auth/guards/permissions.guard';
 import { RequirePermissions } from '../auth/decorators/permissions.decorator';
 import { Permission } from '../auth/constants/permissions.enum';
+import { UserResponseDto } from './dto/user-response.dto';
 
 @UseGuards(AuthGuard('jwt'), PermissionsGuard)
 @UseInterceptors(ClassSerializerInterceptor)
@@ -55,19 +56,28 @@ export class UsersController {
   @Get()
   @RequirePermissions(Permission.ReadUser)
   findAll() {
-    return this.usersService.findAll();
+    const users = this.usersService.findAll();
+    return plainToInstance(UserResponseDto, users, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Get(':id')
   @RequirePermissions(Permission.ReadUser)
   findOne(@Param('id') id: string) {
-    return this.usersService.findOne(id);
+    const user = this.usersService.findOne(id);
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Patch(':id')
   @RequirePermissions(Permission.EditUser)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.usersService.update(+id, updateUserDto);
+    const user = this.usersService.update(+id, updateUserDto);
+    return plainToInstance(UserResponseDto, user, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Delete(':id')
