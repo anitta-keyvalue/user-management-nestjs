@@ -1,11 +1,7 @@
-class HttpException extends Error {
-  public status: number;
-  public message: string;
-
+import { HttpException as NestHttpException } from '@nestjs/common';
+class HttpException extends NestHttpException {
   constructor(status: number, message: string) {
-    super(message);
-    this.status = status;
-    this.message = message;
+    super(message, status);
   }
 }
 

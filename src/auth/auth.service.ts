@@ -15,7 +15,6 @@ export class AuthService {
 
   async login(email: string, pass: string) {
     const user = await this.usersService.findByEmail(email);
-    console.log('auth service user ', user);
     if (user) {
       const isMatch = user ? await bcrypt.compare(pass, user.password) : false;
 
@@ -27,7 +26,7 @@ export class AuthService {
       const userWithPerms =
         await this.usersService.findOneWithPermissions(email);
 
-      console.log('user permisiions ', userWithPerms);
+      console.log('user permissions ', userWithPerms);
 
       const permissions =
         userWithPerms?.role?.rolePermissions?.map((rp) => rp.permission.name) ||

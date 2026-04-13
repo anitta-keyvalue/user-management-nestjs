@@ -17,14 +17,18 @@ import { validate } from 'class-validator';
 import { plainToInstance } from 'class-transformer';
 import HttpException from '../execeptions/httpException';
 import { AuthGuard } from '@nestjs/passport';
+import { PermissionsGuard } from '../auth/guards/permissions.guard';
+import { RequirePermissions } from '../auth/decorators/permissions.decorator';
+import { Permission } from '../auth/constants/permissions.enum';
 
-@UseGuards(AuthGuard('jwt'))
+@UseGuards(AuthGuard('jwt'), PermissionsGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Post()
+  @RequirePermissions(Permission.CreateUser)
   async create(@Body() createUserDto: CreateUserDto) {
     const object = plainToInstance(CreateUserDto, createUserDto);
 
@@ -49,21 +53,25 @@ export class UsersController {
   }
 
   @Get()
+  @RequirePermissions(Permission.ReadUser)
   findAll() {
     return this.usersService.findAll();
   }
 
   @Get(':id')
+  @RequirePermissions(Permission.ReadUser)
   findOne(@Param('id') id: string) {
     return this.usersService.findOne(id);
   }
 
   @Patch(':id')
+  @RequirePermissions(Permission.EditUser)
   update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.usersService.update(+id, updateUserDto);
   }
 
   @Delete(':id')
+  @RequirePermissions(Permission.EditUser)
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
   }
