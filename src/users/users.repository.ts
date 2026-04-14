@@ -67,4 +67,8 @@ export class UsersRepository extends Repository<User> {
       ],
     });
   }
+
+  async updateRefreshToken(id: number, token: string): Promise<void> {
+    await this.update(id, { refreshtoken: token });
+  }
 }

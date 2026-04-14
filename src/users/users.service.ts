@@ -53,4 +53,8 @@ export class UsersService {
   async findOneWithPermissions(email: string): Promise<User | null> {
     return await this.usersRepository.findOneWithPermissions(email);
   }
+
+  async updateRefreshToken(id: number, token: string) {
+    return await this.usersRepository.updateRefreshToken(id, token);
+  }
 }

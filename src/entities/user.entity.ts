@@ -21,6 +21,9 @@ export class User extends AbstractEntity {
   })
   @JoinColumn({ name: 'role_id' })
   role!: Role;
+
+  @Column({ select: false })
+  refreshtoken!: string;
 }
 
 export default User;

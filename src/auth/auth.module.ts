@@ -13,7 +13,7 @@ import { RolesModule } from '../roles/roles.module';
     PassportModule,
     RolesModule,
     JwtModule.register({
-      secret: 'SECRET_KEY',
+      secret: 'ACCESS_SECRET',
       signOptions: { expiresIn: '1h' },
     }),
   ],

@@ -26,8 +26,6 @@ export class AuthService {
       const userWithPerms =
         await this.usersService.findOneWithPermissions(email);
 
-      console.log('user permissions ', userWithPerms);
-
       const permissions =
         userWithPerms?.role?.rolePermissions?.map((rp) => rp.permission.name) ||
         [];
@@ -38,11 +36,71 @@ export class AuthService {
         role: role?.name,
         permissions: permissions,
       };
+
+      const accessToken = this.jwtService.sign(payload, {
+        secret: 'ACCESS_SECRET',
+        expiresIn: '15m',
+      });
+
+      const refreshToken = this.jwtService.sign(payload, {
+        secret: 'REFRESH_SECRET',
+        expiresIn: '7d',
+      });
       return {
-        access_token: this.jwtService.sign(payload),
+        access_token: accessToken,
+        refreshToken: refreshToken,
       };
     } else {
       throw new HttpException(400, 'User not found');
     }
+  }
+
+  async refreshToken(token: string) {
+    const payload = this.jwtService.verify(token, {
+      secret: 'REFRESH_SECRET',
+    });
+
+    const user = await this.usersService.findByEmail(payload?.email);
+    const role = await this.roleService.findOne(String(payload?.sub));
+    const userWithPerms = await this.usersService.findOneWithPermissions(
+      payload?.email,
+    );
+
+    const permissions =
+      userWithPerms?.role?.rolePermissions?.map((rp) => rp.permission.name) ||
+      [];
+
+    const newPayload = {
+      sub: user?.id,
+      email: user?.email,
+      role: role?.name,
+      permissions: permissions,
+    };
+
+    const accessToken = this.jwtService.sign(newPayload, {
+      secret: 'ACCESS_SECRET',
+      expiresIn: '15m',
+    });
+
+    const refreshToken = this.jwtService.sign(newPayload, {
+      secret: 'REFRESH_SECRET',
+      expiresIn: '7d',
+    });
+
+    await this.usersService.updateRefreshToken(
+      Number(newPayload?.sub),
+      refreshToken,
+    );
+    return {
+      access_token: accessToken,
+      refreshToken: refreshToken,
+    };
+  }
+
+  async logout(token: string) {
+    const payload = this.jwtService.verify(token, {
+      secret: 'ACCESS_SECRET',
+    });
+    await this.usersService.updateRefreshToken(Number(payload?.sub), '');
   }
 }
