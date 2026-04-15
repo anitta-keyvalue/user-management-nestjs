@@ -59,7 +59,7 @@ export class RolesController {
   }
 
   @Delete(':roleId/permissions/:permissionId')
-  @RequirePermissions(Permission.DeleteUser)
+  @RequirePermissions(Permission.DeleteRole)
   removePermission(
     @Param('roleId') roleId: number,
     @Param('permissionId') permissionId: number,

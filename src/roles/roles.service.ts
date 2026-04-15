@@ -38,8 +38,14 @@ export class RolesService {
     const role = await this.rolesRepository.findByName(
       updateRoleDto.name ?? '',
     );
-    if (role) {
+    if (!role) {
       throw new HttpException(400, 'Role not existing');
+    }
+    const existingRole = await this.rolesRepository.findByName(
+      updateRoleDto.name ?? '',
+    );
+    if (existingRole) {
+      throw new HttpException(400, 'Role with name already existing');
     }
     return await this.rolesRepository.updateRole(id, updateRoleDto);
   }

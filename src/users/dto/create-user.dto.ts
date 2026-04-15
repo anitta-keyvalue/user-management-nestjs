@@ -23,8 +23,8 @@ export class CreateUserDto {
 
   @IsString()
   @IsNotEmpty({ message: 'Password name cannot be empty' })
-  @MinLength(3)
-  @MaxLength(20)
+  @MinLength(8)
+  @MaxLength(32)
   password!: string;
 
   @IsInt({})

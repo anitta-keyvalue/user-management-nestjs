@@ -15,7 +15,7 @@ export class UsersRepository extends Repository<User> {
       select: {
         id: true,
         email: true,
-        password: true, // 🔓 Explicitly "unmasking" it here
+        password: true,
         name: true,
       },
       relations: [
@@ -45,7 +45,6 @@ export class UsersRepository extends Repository<User> {
 
   async createUser(user: User): Promise<any> {
     const newuser = await this.save(user);
-    delete (newuser as any).password;
     return newuser;
   }
 

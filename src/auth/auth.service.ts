@@ -4,6 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import HttpException from '../execeptions/httpException';
 import { RolesService } from '../roles/roles.service';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Injectable()
 export class AuthService {
@@ -38,12 +40,12 @@ export class AuthService {
       };
 
       const accessToken = this.jwtService.sign(payload, {
-        secret: 'ACCESS_SECRET',
+        secret: process.env.ACCESS_SECRET,
         expiresIn: '15m',
       });
 
       const refreshToken = this.jwtService.sign(payload, {
-        secret: 'REFRESH_SECRET',
+        secret: process.env.REFRESH_SECRET,
         expiresIn: '7d',
       });
       return {
@@ -51,16 +53,19 @@ export class AuthService {
         refreshToken: refreshToken,
       };
     } else {
-      throw new HttpException(400, 'User not found');
+      throw new HttpException(400, 'Invalid credentials');
     }
   }
 
   async refreshToken(token: string) {
     const payload = this.jwtService.verify(token, {
-      secret: 'REFRESH_SECRET',
+      secret: process.env.REFRESH_SECRET,
     });
 
     const user = await this.usersService.findByEmail(payload?.email);
+    if (!user || user.refreshtoken !== token) {
+      throw new HttpException(400, 'Invalid credentials');
+    }
     const role = await this.roleService.findOne(String(payload?.sub));
     const userWithPerms = await this.usersService.findOneWithPermissions(
       payload?.email,
@@ -78,12 +83,12 @@ export class AuthService {
     };
 
     const accessToken = this.jwtService.sign(newPayload, {
-      secret: 'ACCESS_SECRET',
+      secret: process.env.ACCESS_SECRET,
       expiresIn: '15m',
     });
 
     const refreshToken = this.jwtService.sign(newPayload, {
-      secret: 'REFRESH_SECRET',
+      secret: process.env.REFRESH_SECRET,
       expiresIn: '7d',
     });
 
@@ -99,7 +104,7 @@ export class AuthService {
 
   async logout(token: string) {
     const payload = this.jwtService.verify(token, {
-      secret: 'ACCESS_SECRET',
+      secret: process.env.ACCESS_SECRET,
     });
     await this.usersService.updateRefreshToken(Number(payload?.sub), '');
   }

@@ -6,6 +6,8 @@ import { AuthController } from './auth.controller';
 import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/strategy';
 import { RolesModule } from '../roles/roles.module';
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 @Module({
   imports: [
@@ -13,7 +15,7 @@ import { RolesModule } from '../roles/roles.module';
     PassportModule,
     RolesModule,
     JwtModule.register({
-      secret: 'ACCESS_SECRET',
+      secret: process.env.ACCESS_SECRET,
       signOptions: { expiresIn: '1h' },
     }),
   ],

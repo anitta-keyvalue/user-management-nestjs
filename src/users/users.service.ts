@@ -40,8 +40,14 @@ export class UsersService {
     const user = await this.usersRepository.findByEmail(
       updateUserDto.email ?? '',
     );
-    if (user) {
-      throw new HttpException(400, 'User  not existing');
+    if (!user) {
+      throw new HttpException(400, 'User not found');
+    }
+    const existingUser = await this.usersRepository.findByEmail(
+      updateUserDto.email ?? '',
+    );
+    if (existingUser) {
+      throw new HttpException(400, 'User with email already existing');
     }
     return await this.usersRepository.updateUser(id, updateUserDto);
   }

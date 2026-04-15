@@ -14,7 +14,7 @@ export class PermissionsService {
       createPermissionDto.name,
     );
     if (permission) {
-      throw new HttpException(400, 'Permisssion already existing');
+      throw new HttpException(400, 'Permission already existing');
     }
     return await this.permissionsRepository.createPermission(
       createPermissionDto.name,
@@ -33,8 +33,14 @@ export class PermissionsService {
     const permission = await this.permissionsRepository.findByName(
       updatePermissionDto.name ?? '',
     );
-    if (permission) {
-      throw new HttpException(400, 'Role already existing');
+    if (!permission) {
+      throw new HttpException(400, 'Permission already existing');
+    }
+    const existingPermission = await this.permissionsRepository.findByName(
+      updatePermissionDto.name ?? '',
+    );
+    if (existingPermission) {
+      throw new HttpException(400, 'Permission with name already existing');
     }
     return await this.permissionsRepository.updatePermission(
       id,

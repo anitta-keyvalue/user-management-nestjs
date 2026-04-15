@@ -11,6 +11,7 @@ import { AuthService } from './auth.service';
 import { LoginDto } from './dto/login.dto';
 import { RefreshDto } from './dto/refresh.dto';
 import { AuthGuard } from '@nestjs/passport';
+import HttpException from '../execeptions/httpException';
 
 @Controller('auth')
 export class AuthController {
@@ -34,6 +35,9 @@ export class AuthController {
   async logout(@Req() req: Request) {
     const authHeader = req.headers['authorization'];
     const token = authHeader.split(' ')[1];
+    if(!authHeader|| !authHeader.startsWith('Bearer ')) {
+      throw new HttpException(400, 'Invalid authorization header');
+    }
     return this.authService.logout(token);
   }
 }

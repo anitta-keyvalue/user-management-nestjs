@@ -1,7 +1,6 @@
 import { Entity, Column, ManyToOne, JoinColumn } from 'typeorm';
 import AbstractEntity from './abstract.entity';
 import { Role } from './role.entity';
-import { Exclude } from 'class-transformer';
 
 @Entity('users')
 export class User extends AbstractEntity {
@@ -11,7 +10,6 @@ export class User extends AbstractEntity {
   @Column({ unique: true })
   email!: string;
 
-  // @Exclude({ toPlainOnly: true })
   @Column({ select: false })
   password!: string;
 
@@ -22,7 +20,7 @@ export class User extends AbstractEntity {
   @JoinColumn({ name: 'role_id' })
   role!: Role;
 
-  @Column({ select: false })
+  @Column()
   refreshtoken!: string;
 }
 

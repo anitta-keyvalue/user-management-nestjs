@@ -64,7 +64,7 @@ export class RolesRepository extends Repository<Role> {
       });
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (_e) {
-      throw new HttpException(409, 'Error while deleting permisiions');
+      throw new HttpException(409, 'Error while deleting permissions');
     }
   }
 }
