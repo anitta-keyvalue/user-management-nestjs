@@ -12,6 +12,8 @@ import Permission from './entities/permission.entity';
 import User from './entities/user.entity';
 import AbstractEntity from './entities/abstract.entity';
 import RolePermission from './entities/role_permission.entity';
+import UserRoles from './entities/user_roles';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 const typeOrmConfig = ormConfig;
 
@@ -20,8 +22,21 @@ const typeOrmConfig = ormConfig;
     TypeOrmModule.forRoot({
       ...typeOrmConfig,
       autoLoadEntities: true,
-      entities: [Role, Permission, User, AbstractEntity, RolePermission],
+      entities: [
+        Role,
+        Permission,
+        User,
+        AbstractEntity,
+        RolePermission,
+        UserRoles,
+      ],
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60000,
+        limit: 5,
+      },
+    ]),
     RolesModule,
     PermissionsModule,
     UsersModule,

@@ -5,7 +5,6 @@ import User from '../entities/user.entity';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user-dto';
 import bcrypt from 'bcrypt';
-import Role from '../entities/role.entity';
 
 @Injectable()
 export class UsersService {
@@ -19,7 +18,6 @@ export class UsersService {
     const newUser = new User();
     newUser.name = createUserDto.name;
     newUser.email = createUserDto.email;
-    newUser.role = { id: createUserDto.roleId } as Role;
     newUser.password = await bcrypt.hash(createUserDto.password, 10);
     return await this.usersRepository.createUser(newUser);
   }
@@ -62,5 +60,13 @@ export class UsersService {
 
   async updateRefreshToken(id: number, token: string) {
     return await this.usersRepository.updateRefreshToken(id, token);
+  }
+
+  async addRole(userId: number, roleId: number) {
+    return await this.usersRepository.addRoleToUser(userId, roleId);
+  }
+
+  async removeRole(userId: number, roleId: number) {
+    return await this.usersRepository.removeRoleFromUser(userId, roleId);
   }
 }
