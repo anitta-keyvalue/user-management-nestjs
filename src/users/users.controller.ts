@@ -33,7 +33,6 @@ export class UsersController {
   async create(@Body() createUserDto: CreateUserDto) {
     const object = plainToInstance(CreateUserDto, createUserDto);
 
-    // Manually run the validation
     const errors = await validate(object);
 
     if (errors.length > 0) {

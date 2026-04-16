@@ -20,13 +20,11 @@ export class AuthController {
   @HttpCode(HttpStatus.OK) // Sets response to 200 instead of 201 (Created)
   @Post('login')
   async login(@Body() loginDto: LoginDto) {
-    // We pass the validated data to the service
     return this.authService.login(loginDto.email, loginDto.password);
   }
 
   @Post('refresh')
   async refresh(@Body() refreshData: RefreshDto) {
-    // We pass the validated data to the service
     return this.authService.refreshToken(refreshData.refreshToken);
   }
 

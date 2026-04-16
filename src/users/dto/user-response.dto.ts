@@ -14,6 +14,6 @@ export class UserResponseDto extends AbstractResponseDto {
   email!: string;
 
   @Expose()
-  @Type(() => RoleResponseDto) // 👈 This handles the nested object transformation
+  @Type(() => RoleResponseDto)
   role!: RoleResponseDto;
 }
