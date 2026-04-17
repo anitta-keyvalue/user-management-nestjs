@@ -7,10 +7,12 @@ import { UsersModule } from '../users/users.module';
 import { JwtStrategy } from './strategies/strategy';
 import { RolesModule } from '../roles/roles.module';
 import * as dotenv from 'dotenv';
+import { ThrottlerModule } from '@nestjs/throttler';
 dotenv.config();
 
 @Module({
   imports: [
+    ThrottlerModule,
     UsersModule,
     PassportModule,
     RolesModule,

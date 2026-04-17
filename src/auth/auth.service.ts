@@ -12,7 +12,6 @@ export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
-    private roleService: RolesService,
   ) {}
 
   async login(email: string, pass: string) {
@@ -24,18 +23,20 @@ export class AuthService {
         throw new HttpException(400, 'Invalid credentials');
       }
 
-      const role = await this.roleService.findOne(String(user?.role?.id));
-      const userWithPerms =
-        await this.usersService.findOneWithPermissions(email);
+      const roles = user.userRoles.map((ur) => ur.role.name);
 
-      const permissions =
-        userWithPerms?.role?.rolePermissions?.map((rp) => rp.permission.name) ||
-        [];
+      const permissions = [
+        ...new Set(
+          user.userRoles.flatMap((ur) =>
+            ur.role.rolePermissions.map((rp) => rp.permission.name),
+          ),
+        ),
+      ];
 
       const payload = {
         sub: user?.id,
         email: user?.email,
-        role: role?.name,
+        role: roles,
         permissions: permissions,
       };
 
@@ -66,19 +67,20 @@ export class AuthService {
     if (!user || user.refreshtoken !== token) {
       throw new HttpException(400, 'Invalid credentials');
     }
-    const role = await this.roleService.findOne(String(payload?.sub));
-    const userWithPerms = await this.usersService.findOneWithPermissions(
-      payload?.email,
-    );
+    const roles = user.userRoles.map((ur) => ur.role.name);
 
-    const permissions =
-      userWithPerms?.role?.rolePermissions?.map((rp) => rp.permission.name) ||
-      [];
+    const permissions = [
+      ...new Set(
+        user.userRoles.flatMap((ur) =>
+          ur.role.rolePermissions.map((rp) => rp.permission.name),
+        ),
+      ),
+    ];
 
     const newPayload = {
       sub: user?.id,
       email: user?.email,
-      role: role?.name,
+      role: roles,
       permissions: permissions,
     };
 

@@ -19,9 +19,10 @@ export class UsersRepository extends Repository<User> {
         name: true,
       },
       relations: [
-        'role',
-        'role.rolePermissions',
-        'role.rolePermissions.permission',
+        'userRoles',
+        'userRoles.role',
+        'userRoles.role.rolePermissions',
+        'userRoles.role.rolePermissions.permission',
       ],
     });
     return user;
@@ -60,10 +61,25 @@ export class UsersRepository extends Repository<User> {
     return await this.findOne({
       where: { email },
       relations: [
-        'role',
-        'role.rolePermissions',
-        'role.rolePermissions.permission',
+        'userRoles',
+        'userRoles.role',
+        'userRoles.role.rolePermissions',
+        'userRoles.role.rolePermissions.permission',
       ],
+    });
+  }
+
+  async addRoleToUser(userId: number, roleId: number) {
+    return await this.manager.save('user_roles', {
+      user: { id: userId },
+      role: { id: roleId },
+    });
+  }
+
+  async removeRoleFromUser(userId: number, roleId: number) {
+    return await this.manager.delete('user_roles', {
+      user: { id: userId },
+      role: { id: roleId },
     });
   }
 

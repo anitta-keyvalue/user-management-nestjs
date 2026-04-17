@@ -49,7 +49,10 @@ export class UsersController {
         }),
       );
     }
-    return this.usersService.create(createUserDto);
+    const respose = this.usersService.create(createUserDto);
+    return plainToInstance(UserResponseDto, respose, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Get()
@@ -83,5 +86,15 @@ export class UsersController {
   @RequirePermissions(Permission.EditUser)
   remove(@Param('id') id: string) {
     return this.usersService.remove(+id);
+  }
+
+  @Post(':id/roles/:roleId')
+  addRole(@Param('id') id: number, @Param('roleId') roleId: number) {
+    return this.usersService.addRole(id, roleId);
+  }
+
+  @Delete(':id/roles/:roleId')
+  removeRole(@Param('id') id: number, @Param('roleId') roleId: number) {
+    return this.usersService.removeRole(id, roleId);
   }
 }
