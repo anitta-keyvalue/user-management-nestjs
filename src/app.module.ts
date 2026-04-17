@@ -14,6 +14,7 @@ import AbstractEntity from './entities/abstract.entity';
 import RolePermission from './entities/role_permission.entity';
 import UserRoles from './entities/user_roles';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { BullModule } from '@nestjs/bullmq';
 
 const typeOrmConfig = ormConfig;
 
@@ -37,6 +38,12 @@ const typeOrmConfig = ormConfig;
         limit: 5,
       },
     ]),
+    BullModule.forRoot({
+      connection: {
+        host: 'localhost',
+        port: 6379,
+      },
+    }),
     RolesModule,
     PermissionsModule,
     UsersModule,
