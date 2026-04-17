@@ -9,25 +9,21 @@ import {
 
 export class CreateUserDto {
   @IsString()
-  @IsNotEmpty({ message: 'Name name cannot be empty' })
+  @IsNotEmpty({ message: 'Name cannot be empty' })
   @MinLength(3)
   @MaxLength(20)
   name!: string;
 
   @IsString()
   @IsEmail({}, { message: 'Invalid email format' })
-  @IsNotEmpty({ message: 'Email name cannot be empty' })
+  @IsNotEmpty({ message: 'Email cannot be empty' })
   @MinLength(3)
   @MaxLength(20)
   email!: string;
 
   @IsString()
-  @IsNotEmpty({ message: 'Password name cannot be empty' })
+  @IsNotEmpty({ message: 'Password cannot be empty' })
   @MinLength(8)
   @MaxLength(32)
   password!: string;
-
-  @IsInt({})
-  @IsNotEmpty()
-  roleId!: number;
 }

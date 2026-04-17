@@ -50,7 +50,10 @@ export class UsersController {
         }),
       );
     }
-    return this.usersService.create(createUserDto);
+    const respose = this.usersService.create(createUserDto);
+    return plainToInstance(UserResponseDto, respose, {
+      excludeExtraneousValues: true,
+    });
   }
 
   @Get()

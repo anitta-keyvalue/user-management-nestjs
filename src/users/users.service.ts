@@ -19,6 +19,7 @@ export class UsersService {
     newUser.name = createUserDto.name;
     newUser.email = createUserDto.email;
     newUser.password = await bcrypt.hash(createUserDto.password, 10);
+    newUser.refreshtoken = 'token';
     return await this.usersRepository.createUser(newUser);
   }
 
